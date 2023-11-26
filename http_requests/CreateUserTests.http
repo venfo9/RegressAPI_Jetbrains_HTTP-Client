@@ -1,24 +1,32 @@
 < {%
+    // Function to generate a random integer up to a specified maximum
     function getRandomInt(max) {
         return Math.floor(Math.random() * max);
     }
 
+    // Function to generate a random name using the "user" prefix and a random number
     function generateRandomName() {
         return "user" + getRandomInt(200);
     }
 
+    // Function to generate a random job using the "job" prefix and a random number
     function generateRandomJob() {
         return "job" + getRandomInt(200);
     }
 
+    // Function to log a message and set a global variable
     function logAndSetGlobal(key, value) {
+        // Log the message to the console
         console.log(`Setting global variable ${key}: ${value}`);
+        // Set the global variable using the provided key and value
         client.global.set(key, value);
     }
 
+    // Generate a random name and set it as a global variable
     const randomName = generateRandomName();
     logAndSetGlobal("nameValue", randomName);
 
+    // Generate a random job and set it as a global variable
     const randomJob = generateRandomJob();
     logAndSetGlobal("jobValue", randomJob);
 %}
