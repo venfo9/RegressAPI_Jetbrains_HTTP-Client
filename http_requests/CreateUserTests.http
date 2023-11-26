@@ -1,0 +1,140 @@
+< {%
+    function getRandomInt(max) {
+        return Math.floor(Math.random() * max);
+    }
+
+    function generateRandomName() {
+        return "user" + getRandomInt(200);
+    }
+
+    function generateRandomJob() {
+        return "job" + getRandomInt(200);
+    }
+
+    function logAndSetGlobal(key, value) {
+        console.log(`Setting global variable ${key}: ${value}`);
+        client.global.set(key, value);
+    }
+
+    const randomName = generateRandomName();
+    logAndSetGlobal("nameValue", randomName);
+
+    const randomJob = generateRandomJob();
+    logAndSetGlobal("jobValue", randomJob);
+%}
+
+# @name Create user (Positive case)
+POST {{base-url}}/{{api-ver}}/users
+Content-Type: application/json
+
+{
+    "{{nameKey}}": "{{nameValue}}",
+    "{{jobKey}}": "{{jobValue}}"
+}
+> {%
+    import {Name,Job,Id,CreatedAt,StatusCode201} from "./Assertions/CreateUser";
+    Name();
+    Job();
+    Id();
+    CreatedAt();
+    StatusCode201();
+
+%}
+###
+# @name Create user (Name only)
+POST {{base-url}}/{{api-ver}}/users
+Content-Type: application/json
+
+{
+    "{{nameKey}}": "{{nameValue}}"
+}
+
+> {%
+    import {Name,Id,CreatedAt,StatusCode201} from "./Assertions/CreateUser";
+    Name();
+    Id();
+    CreatedAt();
+    StatusCode201();
+
+%}
+
+###
+# @name Create user (Job only)
+POST {{base-url}}/{{api-ver}}/users
+Content-Type: application/json
+
+{
+    "{{jobKey}}": "{{jobValue}}"
+}
+
+> {%
+    import {Job,Id,CreatedAt,StatusCode201} from "./Assertions/CreateUser";
+    Job();
+    Id();
+    CreatedAt();
+    StatusCode201();
+%}
+
+###
+# @name Create user (Empty fields)
+POST {{base-url}}/{{api-ver}}/users
+Content-Type: application/json
+
+{
+    "{{nameKey}}": "",
+    "{{jobKey}}": ""
+}
+
+> {%
+    import {NameEmpty, JobEmpty,Id,CreatedAt,StatusCode201} from "./Assertions/CreateUser";
+    NameEmpty();
+    JobEmpty();
+    Id();
+    CreatedAt();
+    StatusCode201();
+
+%}
+
+###
+# @name Create user (Empty body)
+POST {{base-url}}/{{api-ver}}/users
+Content-Type: application/json
+
+{
+}
+
+> {%
+    import {StatusCode404} from "./Assertions/CreateUser";
+    StatusCode404();
+%}
+
+###
+# @name Create user (Not valid keys)
+POST {{base-url}}/{{api-ver}}/users
+Content-Type: application/json
+
+{
+    "nameKey": "{{nameValue}}",
+    "jobKey": "{{jobValue}}"
+}
+
+> {%
+    import {StatusCode404} from "./Assertions/CreateUser";
+    StatusCode404();
+%}
+
+###
+# @name Create user (Extra not valid key)
+POST {{base-url}}/{{api-ver}}/users
+Content-Type: application/json
+
+{
+    "{{nameKey}}": "{{nameValue}}",
+    "{{jobKey}}": "{{jobValue}}",
+    "id": "-1"
+}
+
+> {%
+    import {StatusCode404} from "./Assertions/CreateUser";
+    StatusCode404();
+%}

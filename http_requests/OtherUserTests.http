@@ -1,0 +1,73 @@
+
+# @name Update user
+PUT {{base-url}}/{{api-ver}}/users/{{userId}}
+Content-Type: application/json
+
+{
+    "{{nameKey}}": "{{nameValue}}_edited",
+    "{{jobKey}}": "{{jobValue}}_edited"
+}
+
+> {%
+    import {
+        Name,
+        Job,
+        UpdatedAt,
+        StatusCode200
+    } from "./Assertions/UpdateUser";
+
+    Name();
+    Job();
+    UpdatedAt();
+    StatusCode200();
+%}
+
+###
+# @name Get userId after modification
+GET {{base-url}}/{{api-ver}}/users/{{userId}}
+
+> {%
+    import {
+        idField,
+        emailField,
+        firstNameField,
+        lastNameField,
+        avatarField,
+        supportUrlField,
+        supportTextField,
+        statusCode200
+    } from "./Assertions/GetUserId";
+
+    idField();
+    emailField();
+    firstNameField();
+    lastNameField();
+    avatarField();
+    supportUrlField();
+    supportTextField();
+    statusCode200();
+
+%}
+
+###
+# @name Delete user
+DELETE {{base-url}}/{{api-ver}}/users/{{userId}}
+
+> {%
+    import {
+        statusCode204
+    } from "./Assertions/DeleteUser";
+
+    statusCode204();
+%}
+###
+# @name Get userId after deletion
+GET {{base-url}}/{{api-ver}}/users/{{userId}}
+
+> {%
+    import {
+        statusCode404
+    } from "./Assertions/GetUserId";
+
+    statusCode404();
+%}
