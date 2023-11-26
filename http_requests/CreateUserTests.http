@@ -16,9 +16,7 @@
 
     // Function to log a message and set a global variable
     function logAndSetGlobal(key, value) {
-        // Log the message to the console
         console.log(`Setting global variable ${key}: ${value}`);
-        // Set the global variable using the provided key and value
         client.global.set(key, value);
     }
 
